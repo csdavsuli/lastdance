@@ -9,7 +9,7 @@ jogosult=False
 
 
 #MŰKÖDÉS
-hibasbelepes=3
+hibasbelepes=2
 
 pk=int(input("Kérem adja meg a PIN kódot: "))
 if pk==pin:
