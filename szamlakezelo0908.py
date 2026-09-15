@@ -6,11 +6,33 @@ pin=1234
 hasznalatidij=1000
 adatfajl="szamla.txt"
 jogosult=False
-
+tranzakciok=[]
 #funkciók
+def adatbeolvasas(fajl):
+    try:
+        with open(fajl, encoding='utf-8') as f:
+            print("Sikeres beolvasás")
+            global tranzakciok
+            tranzakciok=f.readlines()
+    except IOError as e:
+        print(f"Fájl művelet hiba {e}")
 
+def adatmentes(fajl):
+    try:
+        with open(fajl, 'w', encoding='utf-8') as f:
+            global tranzakciok
+            tranzakciok= f.writelines(tranzakciok)
+    except IOError as e:
+        print(f"Fájl művelet hiba {e}")
 def egyenleg():
-    print("Egyenleg jelenleg: ")
+    szamlaegyenleg=0
+    for sz in tranzakciok:
+        
+        szamlaegyenleg += int(sz) 
+    
+    
+    
+    print(f"Egyenleg jelenleg: {szamlaegyenleg} ")
 
 def utalas(osszeg):
     print("Utalás ")
@@ -26,7 +48,7 @@ def tortenet(mennyiseg):
 
 #MŰKÖDÉS
 hibasbelepes = 3
-
+adatbeolvasas(adatfajl)
 pk = int(input(f"Kérem adja meg a PIN kódot: "))
 if pk == pin:
         jogosult = True
@@ -44,6 +66,7 @@ while(not jogosult and hibasbelepes>1):
 if not jogosult:
     print(f"Próbálkozások vége!")
 
+print(f"{tranzakciok}")
 
 #FUNKCIÓVÁLASZTÓ MENÜ
 cim = "\nSZÁMLAKEZELŐ PROGRAM\n=====================\n"
@@ -58,40 +81,42 @@ menu = [
 ]
 
 menupontok = [1,2,3,4,9]
-print(cim)
-for me in menu:
-    print(f"{me}")
-
-valasztas = int(input("Válassz tevékenységet"))
-
-while valasztas not in menupontok:
-    print("Nincs ilyen menüpont")
-    
+while True:
     print(cim)
     for me in menu:
-        print(f"{me}\n")
-    
+        print(f"{me}")
+
     valasztas = int(input("Válassz tevékenységet"))
 
+    while valasztas not in menupontok:
+        print("Nincs ilyen menüpont")
+    
+        print(cim)
+        for me in menu:
+            print(f"{me}\n")
+    
+        valasztas = int(input("Válassz tevékenységet"))
 
 
 
+    print(f"{'\n '* 20}")
 
 
-if valasztas == 1:
-    egyenleg()
+    if valasztas == 1:
+        egyenleg()
 
-elif valasztas == 2:
-    utalas(123)
+    elif valasztas == 2:
+        utalas(123)
 
-elif valasztas == 3:
-    penzbetet(10000)
+    elif valasztas == 3:
+        penzbetet(10000)
 
-elif valasztas == 4:
-    pass
+    elif valasztas == 4:
+        pass
 
-elif valasztas == 9:
-    exit()
+    elif valasztas == 9:
+        adatmentes(adatfajl)
+        exit()
 
 #######################################
 
