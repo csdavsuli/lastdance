@@ -25,7 +25,7 @@ def adatmentes(fajl):
     except IOError as e:
         print(f"Fájl művelet hiba {e}")
 def egyenleg():
-    szamlaegyenleg=0
+    szamlaegyenleg=0 
     for sz in tranzakciok:
         
         szamlaegyenleg += int(sz) 
@@ -33,18 +33,33 @@ def egyenleg():
     
     
     print(f"Egyenleg jelenleg: {szamlaegyenleg} ")
-
+    return szamlaegyenleg
 def utalas(osszeg):
-    print("Utalás ")
-
+    print("Utalás: ")
+    osszeg+= round(hasznalatidij*0.05)
+    if osszeg>egyenleg():
+        print("Nincs elég pénzed!")
+    else:    
+        tranzakciok.append(f"-{osszeg}")
+    
+    egyenleg()
 def penzbetet(osszeg):
     print("Betét: ")
+    tranzakciok.append(f"+{osszeg}")
+    egyenleg()
 
 #összes tranzakció mennyiseg = 0 --> összes tranzakció
 #utolsó mennyiseg tranzakció !=0 --> utolsó db tranzk.
 
-def tortenet(mennyiseg):
+def tortenet(darab):
     print("Tranzakciók: ")
+    
+    if darab == 0:
+        kezdet = 0
+    else:
+        kezdet=len(tranzakciok)-darab 
+    for i in range(kezdet, len(tranzakciok)):
+        print(f"\t{tranzakciok[i].rstrip()}")    
 
 #MŰKÖDÉS
 hibasbelepes = 3
@@ -106,13 +121,17 @@ while True:
         egyenleg()
 
     elif valasztas == 2:
-        utalas(123)
+        u=int(input("Utalás összege: "))
+        utalas(u)
+
 
     elif valasztas == 3:
-        penzbetet(10000)
+        b=int(input("Betét összege: "))
+        penzbetet(b)
 
     elif valasztas == 4:
-        pass
+        m = int(input("Előzmények mérete(db): "))
+        tortenet(m)
 
     elif valasztas == 9:
         adatmentes(adatfajl)
