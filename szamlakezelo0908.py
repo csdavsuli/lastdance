@@ -21,8 +21,8 @@ def adatbeolvasas(fajl):
 def adatmentes(fajl):
     try:
         with open(fajl, 'w', encoding='utf-8') as f:
-            global tranzakciok
-            tranzakciok= f.writelines(tranzakciok)
+            for i in range(len(tranzakciok)):
+                f.write(f"{tranzakciok[i].rstrip()}\n")
     except IOError as e:
         print(f"Fájl művelet hiba {e}")
 def egyenleg():
