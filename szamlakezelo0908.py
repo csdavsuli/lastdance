@@ -61,6 +61,31 @@ def tortenet(darab):
         kezdet=len(tranzakciok)-darab 
     for i in range(kezdet, len(tranzakciok)):
         print(f"\t{tranzakciok[i].rstrip()}")    
+    
+def koltes_osszeg():
+    osszeg=0
+    
+    for sz in tranzakciok:
+        if int(sz)<0:
+            osszeg+= int(sz)
+    
+    return osszeg
+
+def betet_osszeg():
+    osszeg=0
+    for sz in tranzakciok:
+        if int(sz)>0:
+            osszeg+=int(sz)
+    return osszeg
+
+def legnagyobb_kiadas():
+    min=0 
+    for sz in tranzakciok:
+        if int(sz)<min:
+            min=int(sz)
+            
+    return min
+    
 
 #MŰKÖDÉS
 hibasbelepes = 3
@@ -90,13 +115,16 @@ menu = [
     "1. Egyenleg lekérdezés",
     "2. Pénz kivétel/utalás",
     "3.Pénz betét",
-    "-------------------",
     "4.Tranzakciótörténet",
+    "5.Költések összege",
+    "6.Betétek összege",
+    "7.Legnagyobb kiadás",
+    "-------------------",
     "9.Kilépés"    
 
 ]
 
-menupontok = [1,2,3,4,9]
+menupontok = [1,2,3,4,5,6,7,9]
 while True:
     print(Fore.BLUE)
     print(cim)
@@ -133,7 +161,17 @@ while True:
     elif valasztas == 4:
         m = int(input("Előzmények mérete(db): "))
         tortenet(m)
-
+    
+    
+    elif valasztas == 5:
+        print(f"\nÖsszes költés: {koltes_osszeg()}")
+    
+    elif valasztas == 6:
+        print(f"\nÖsszes betét: {betet_osszeg()}")
+    
+    elif valasztas == 7:
+        print(f"\nLegnagyobb kiadás: {legnagyobb_kiadas()} FT")
+    
     elif valasztas == 9:
         adatmentes(adatfajl)
         exit()
