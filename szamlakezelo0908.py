@@ -1,5 +1,6 @@
 #SZÁMLAKEZELÉS
-
+import subprocess
+from colorama import Fore,Back,Style
 #GLOBAL VALTOZOK
 egyenleg=0
 pin=1234
@@ -67,19 +68,19 @@ adatbeolvasas(adatfajl)
 pk = int(input(f"Kérem adja meg a PIN kódot: "))
 if pk == pin:
         jogosult = True
-        print(f"Jogosultság ellenőrzése sikeres.")
+        print(f"{Fore.GREEN}Jogosultság ellenőrzése sikeres.{Style.RESET_ALL}")
 
 while(not jogosult and hibasbelepes>1):
-    print(f"Jogosultság ellenőrzése sikertelen.")
+    print(f"{Fore.RED}Jogosultság ellenőrzése sikertelen.{Style.RESET_ALL}")
     pk = int(input("Kérem adja meg a PIN kódot: "))
     hibasbelepes -= 1
     
     if pk == pin:
         jogosult=True
-        print(f"Jogosultság ellenőrzése sikeres.")
+        print(f"{Fore.GREEN}Jogosultság ellenőrzése sikeres.{Style.RESET_ALL}")
 
 if not jogosult:
-    print(f"Próbálkozások vége!")
+    print(f"{Fore.RED}Próbálkozások vége!{Style.RESET_ALL}")
 
 print(f"{tranzakciok}")
 
@@ -97,6 +98,7 @@ menu = [
 
 menupontok = [1,2,3,4,9]
 while True:
+    print(Fore.BLUE)
     print(cim)
     for me in menu:
         print(f"{me}")
@@ -112,19 +114,18 @@ while True:
     
         valasztas = int(input("Válassz tevékenységet"))
 
-
+    print(Style.RESET_ALL)
 
     print(f"{'\n '* 20}")
 
 
     if valasztas == 1:
         egyenleg()
-
+        
     elif valasztas == 2:
         u=int(input("Utalás összege: "))
         utalas(u)
-
-
+        
     elif valasztas == 3:
         b=int(input("Betét összege: "))
         penzbetet(b)
@@ -136,6 +137,7 @@ while True:
     elif valasztas == 9:
         adatmentes(adatfajl)
         exit()
-
+    input(f"Üss egy billentyűt a folytatáshoz...")
+    subprocess.run(["cls"],shell=True)
 #######################################
 
