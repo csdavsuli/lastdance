@@ -235,7 +235,7 @@ menu = [
 
 menupontok = [1,2,3,4,5,6,7,9]
 
-while True:
+while belepes==True:
 
     print(Fore.BLUE)
 
