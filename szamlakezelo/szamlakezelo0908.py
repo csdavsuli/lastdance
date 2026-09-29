@@ -11,7 +11,7 @@ egyenleg = 0  # Kezdő egyenleg (a funkció neve is ez, érdemes figyelni az át
 pin = 1234  # Helyes PIN kód az azonosításhoz
 hasznalatidij = 1000  # Fix alapérték a tranzakciós díj számításához
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # A futó Python fájl könyvtára
-adatfajl = os.path.join(BASE_DIR, "szamla.txt")  # A tranzakciókat tároló fájl teljes útvonala
+adatfajl = os.path.join(BASE_DIR, "szamlakezelo/szamla.txt")  # A tranzakciókat tároló fájl teljes útvonala
 jogosult = False  # Jelzi, hogy a felhasználó sikeresen bejelentkezett-e
 tranzakciok = []  # Ebben a listában tároljuk a tranzakciókat 
 

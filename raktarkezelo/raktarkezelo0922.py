@@ -9,7 +9,7 @@ raktarkeszlet=0
 
 rjelszo="Labgyak2026"
 
-adatfajl="raktar.txt"
+adatfajl="raktarkezelo/raktar.txt"
 
 belepes=False
 
@@ -101,7 +101,7 @@ def berakas(osszeg):
 
 def tortenet(darab):
 
-    print("Tranzakciók: ")
+    print("Berakások/kivételek: ")
 
    
 
