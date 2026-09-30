@@ -6,7 +6,7 @@ from colorama import Fore, Back, Style
 # GLOBÁLIS VÁLTOZÓK
 pin_kod = 1234
 egyenleg = 0
-adatfajl = "szamla3.csv"
+adatfajl = "03_Számlakezelo-2\\szamla3.csv"
 jogosult = False
 tranzakciok = []
 
@@ -14,22 +14,58 @@ tranzakciok = []
 #######################################
 # FUNKCIÓK
 #######################################
-
 def adatbeolvasas(fajl):
     try:
         with open(fajl, "r", encoding="UTF-8") as f:
             global tranzakciok
-            sor =f.readline().strip().split(',')    #sor:lista
-            tranzakciok.app(sor)            
             
-            
-            
+            for s in f:
+                sor = s.strip().split(',')   # sor: lista
+                tranzakciok.append(sor)
+                        
     except IOError as e:
         print(f"Fájl művelet hiba: {e}")
 
 
 
 
+
+
+def egyenleg():
+    szamla_egyenleg = 0
+    
+    for szl in tranzakciok: 
+        szamla_egyenleg += int(szl[2])
+        print(int(szl[2]))    
+    
+    return szamla_egyenleg
+
+
+def penz_kivetel():    
+    datum = input("\nDátum? (yyyy.mm.d): ")
+    indok = input("Milyen kategóriába tartozik a költés?: ")
+    kivetel = input("Mekkora összeget veszel ki?: ")
+    megjegyzes = input("Megjegyzés: ")
+
+    kivetellista=[datum, indok, "-" + kivetel, megjegyzes]    
+    tranzakciok.append(kivetellista)
+    
+    print(f"\nAz új egyenleged: {egyenleg()} ft")
+        
+
+
+
+
+
+
+
+
+
+
+
+#######################################
+# A PROGRAM
+#######################################
 
 # BEJELENTKEZÉS
 hibas_belepesszam = 3
@@ -51,15 +87,14 @@ while(not jogosult and hibas_belepesszam > 1):
 
 if not jogosult:
     print(f"{Fore.RED} Hibás PIN kód!")
+    exit()
 
 print(f"{Fore.RESET}", end="")
 
-# adatbeolvasas(adatfajl)
+adatbeolvasas(adatfajl)
 
 # Beolvasás teszt (kiírás)
 # print(f"{tranzakciok}")
-
-
 
 
 # FUNKCIÓVÁLASZTÓ MENÜ
@@ -76,7 +111,7 @@ menu = [
     "8. Havi összesítő",
     "9. Időszakos összesítő",
     "10. Tranzakció törlése",
-    "11. Tranzakció módosítása",
+    "11. Tranzakció módosítása",    
     "--------------",
     "13. Kilépés"
 ]
@@ -106,13 +141,13 @@ while True:
     print(f"{Fore.RESET}", end="")
 
     # "Képernyő törlése"
-    # print(f"{'\n' * 20}")q
+    # print(f"{'\n' * 20}")
 
-    # if valasztas == 1:
-    #     egyenleg()
-    # elif valasztas == 2:
-    #     u = int(input("Kivétel vagy utalás összege: "))
-    #     utalas(u)
+
+    if valasztas == 1:
+        print(f"\nAz egyenleged: {egyenleg()} Ft")
+    elif valasztas == 2:
+        penz_kivetel()
     # elif valasztas == 3:
     #     b = int(input("Betét összege: "))
     #     penzbetet(b)
@@ -125,10 +160,9 @@ while True:
     #     print(f"\nÖsszes pénzbetét: {betet_osszeg()} Ft")
     # elif valasztas == 7:
     #     print(f"Legnagyobb kiadás: {legnagyobb_kiadas()} Ft")
-    # elif valasztas == 9:
-    #     mentes(adatfajl)
-    #     exit()
+    elif valasztas == 13:
+     #     mentes(adatfajl)
+        exit()
 
     input(f"Üss egy billentyűt a folytatáshoz...")
     subprocess.run(["cls"], shell=True)
-
