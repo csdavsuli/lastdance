@@ -1,8 +1,6 @@
 import subprocess
 from colorama import Fore, Back, Style
 
-
-
 # GLOBÁLIS VÁLTOZÓK
 pin_kod = 1234
 egyenleg = 0
@@ -18,51 +16,107 @@ def adatbeolvasas(fajl):
     try:
         with open(fajl, "r", encoding="UTF-8") as f:
             global tranzakciok
-            
+
             for s in f:
-                sor = s.strip().split(',')   # sor: lista
+                sor = s.strip().split(",")  # sor: lista
                 tranzakciok.append(sor)
-                        
+
     except IOError as e:
         print(f"Fájl művelet hiba: {e}")
 
 
-
-
-
-
 def egyenleg():
     szamla_egyenleg = 0
-    
-    for szl in tranzakciok: 
+
+    for szl in tranzakciok:
         szamla_egyenleg += int(szl[2])
-        print(int(szl[2]))    
-    
+        # print(int(szl[2]))
+
     return szamla_egyenleg
 
 
-def penz_kivetel():    
+def penz_kivetel():
     datum = input("\nDátum? (yyyy.mm.d): ")
     indok = input("Milyen kategóriába tartozik a költés?: ")
     kivetel = input("Mekkora összeget veszel ki?: ")
     megjegyzes = input("Megjegyzés: ")
 
-    kivetellista=[datum, indok, "-" + kivetel, megjegyzes]    
+    kivetellista = [datum, indok, "-" + kivetel, megjegyzes]
+    tranzakciok.append(kivetellista)
+
+    print(f"\nAz új egyenleged: {egyenleg()} Ft")
+
+
+def penzbetet():
+    datum = input("\nDátum? (yyyy.mm.d): ")
+    indok = "-"
+    betet = input("Mekkora összeget fizetsz be?: ")
+    megjegyzes = "-"
+    
+    kivetellista = [datum, indok, "+" + betet, megjegyzes]
     tranzakciok.append(kivetellista)
     
-    print(f"\nAz új egyenleged: {egyenleg()} ft")
+    print(f"\nAz új egyenleged: {egyenleg()} Ft")
+
+
+def atlagos_koltes():
+    osszeg = 0
+    db = 0
+    
+    for sor in tranzakciok:        
+        akt_osszeg = int(sor[2])
         
+        if akt_osszeg < 0:
+            db += 1
+            osszeg += akt_osszeg
+    
+    return (osszeg / db)
 
 
+def legnagyobb_kiadas():
+    min_ertek = 0    
+    
+    for sor in tranzakciok:
+        akt_osszeg = int(sor[2])
+        
+        if akt_osszeg < min_ertek:
+            min_ertek = akt_osszeg
+            
+    return min_ertek
 
 
+# darab = 0 -> összes tranzakció
+# darab !=0 -> utolsó darab tranzakcio
+def tortenet(darab):
+    print("Tranzakciók: ")
+    
+    if darab == 0:
+        kezdet = 0
+    else:
+        kezdet = len(tranzakciok)-darab
+    
+    print(f"\n\t{'-'*83}")
+    print(f"\t| {'Dátum':^12} | {'Kategória':^12} | {'Összeg':^16} | {'Megjegyzés':30} |")
+    print(f"\t{'-'*83}")
+    
+    for i in range(kezdet, len(tranzakciok)):
+        print(f"\t| {tranzakciok[i][0]:>12} | {tranzakciok[i][1]:<12} | {tranzakciok[i][2]:>13} Ft | {tranzakciok[i][3]:30} |")
 
+    print(f"\t{'-'*83}\n")
 
+def tranzakcio_szures(kategoria):
+    szurt_lista = []
+    for sor in tranzakciok:
+        if sor[1] == kategoria:
+            adatok =  [sor[0], sor[2]]
+            szurt_lista.append(adatok)
+    return szurt_lista
 
+def tranzakcio_torles():
+    tranzakciok.pop
+    tranzakciok.pop
 
-
-
-
+    #tranzakciok = tranzakciok[0:-2]
 #######################################
 # A PROGRAM
 #######################################
@@ -73,14 +127,14 @@ hibas_belepesszam = 3
 pk = int(input("Add meg a PIN kódodat!: "))
 
 if pk == pin_kod:
-        jogosult = True
-        print(f"{Fore.GREEN} Sikeres belépés!")
+    jogosult = True
+    print(f"{Fore.GREEN} Sikeres belépés!")
 
-while(not jogosult and hibas_belepesszam > 1):
+while not jogosult and hibas_belepesszam > 1:
     print(f"{Fore.RED} Hibás PIN kód!")
     pk = int(input("Add meg a PIN kódodat!: "))
     hibas_belepesszam -= 1
-  
+
     if pk == pin_kod:
         jogosult = True
         print(f"{Fore.GREEN} Sikeres belépés!")
@@ -111,9 +165,9 @@ menu = [
     "8. Havi összesítő",
     "9. Időszakos összesítő",
     "10. Tranzakció törlése",
-    "11. Tranzakció módosítása",    
+    "11. Tranzakció módosítása",
     "--------------",
-    "13. Kilépés"
+    "13. Kilépés",
 ]
 
 menupontok = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13]
@@ -121,9 +175,9 @@ menupontok = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13]
 while True:
     print(f"{Back.LIGHTCYAN_EX}{cim}")
     print(f"{Back.RESET}", end="")
-    
+
     print(f"{Fore.LIGHTCYAN_EX}", end="")
-    
+
     for me in menu:
         print(f"{me}")
 
@@ -131,8 +185,8 @@ while True:
 
     while valasztas not in menupontok:
         print("Nincs ilyen menüpont!\n")
-        
-        print(cim)    
+
+        print(cim)
         for me in menu:
             print(f"{me}")
 
@@ -143,26 +197,32 @@ while True:
     # "Képernyő törlése"
     # print(f"{'\n' * 20}")
 
-
     if valasztas == 1:
         print(f"\nAz egyenleged: {egyenleg()} Ft")
     elif valasztas == 2:
         penz_kivetel()
-    # elif valasztas == 3:
-    #     b = int(input("Betét összege: "))
-    #     penzbetet(b)
-    # elif valasztas == 4:
-    #     m = int(input("Előzmény mérete (db) Minden: [0]: "))
-    #     tortenet(m)
-    # elif valasztas == 5:
-    #     print(f"\nÖsszes költés: {koltes_osszeg()} Ft")
-    # elif valasztas == 6:
-    #     print(f"\nÖsszes pénzbetét: {betet_osszeg()} Ft")
-    # elif valasztas == 7:
-    #     print(f"Legnagyobb kiadás: {legnagyobb_kiadas()} Ft")
+    elif valasztas == 3:
+        penzbetet()
+    elif valasztas == 4:
+        print(f"Az átlagos költésed: {atlagos_koltes()} Ft")
+    elif valasztas == 5:
+        print(f"Legnagyobb kiadás: {legnagyobb_kiadas()} Ft")
+    elif valasztas == 6:
+        db = int(input("Mennyi tranzakciót szeretne látni? [0: összes]: "))
+        tortenet(db)
+    elif valasztas == 7:
+        kategoriak= ["Fizetés", "Ajándék", "Utazás", "Vásárlás", "Szórakozás"]
+        kategoria = input(f"Válassz kategóriát: {kategoriak}:")
+        lista =tranzakcio_szures(kategoria)
+        
+        print (f"{kategoria} tranzakciói: ")
+        for sor in lista:
+            print(f"\t{sor}")
     elif valasztas == 13:
-     #     mentes(adatfajl)
+        #     mentes(adatfajl)
         exit()
 
     input(f"Üss egy billentyűt a folytatáshoz...")
     subprocess.run(["cls"], shell=True)
+    
+    
