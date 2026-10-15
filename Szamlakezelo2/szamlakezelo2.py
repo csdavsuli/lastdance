@@ -4,7 +4,7 @@ from colorama import Fore, Back, Style
 # GLOBÁLIS VÁLTOZÓK
 pin_kod = 1234
 egyenleg = 0
-adatfajl = "03_Számlakezelo-2\\szamla3.csv"
+adatfajl = "Szamlakezelo2\\szamla3.csv"
 jogosult = False
 tranzakciok = []
 
@@ -24,6 +24,18 @@ def adatbeolvasas(fajl):
     except IOError as e:
         print(f"Fájl művelet hiba: {e}")
 
+def mentes(fajl):
+    try:
+        with open(fajl,"w",encoding="UTF-8") as f:
+            for sor in tranzakciok:
+                for i in range(len(sor)):
+                    if i == 3:
+                        f.write(f"{sor[i]}\n")
+                    else:
+                        f.write(f"{sor[i]},")
+    
+    except IOError as e:
+        print("NEM JÓ VAÉA?o")
 
 def egyenleg():
     szamla_egyenleg = 0
@@ -104,19 +116,43 @@ def tortenet(darab):
 
     print(f"\t{'-'*83}\n")
 
+
 def tranzakcio_szures(kategoria):
     szurt_lista = []
+    
     for sor in tranzakciok:
         if sor[1] == kategoria:
-            adatok =  [sor[0], sor[2]]
+            adatok = [sor[0], sor[2]]    
             szurt_lista.append(adatok)
+
     return szurt_lista
 
-def tranzakcio_torles():
-    tranzakciok.pop
-    tranzakciok.pop
 
-    #tranzakciok = tranzakciok[0:-2]
+def tranzakcio_torles():
+    #tranzakciok.pop()
+    #tranzakciok.pop()
+    
+    global tranzakciok
+    tranzakciok = tranzakciok[0:-2]
+
+def havi_osszesito(honap):
+    havi_egyenleg = 0
+    
+    for sor in tranzakciok:
+        datum = sor[0].split(".")
+        akt_ev=int(datum[0])
+        akt_honap = int(datum[1])
+        
+        if akt_honap == honap:
+            havi_egyenleg += int(sor[2])   
+    return havi_egyenleg
+
+def osszesito(kezdo, vege):
+    idoszakos_egyenleg=0
+    datum = sor[0].split(".")
+    
+
+
 #######################################
 # A PROGRAM
 #######################################
@@ -210,19 +246,28 @@ while True:
     elif valasztas == 6:
         db = int(input("Mennyi tranzakciót szeretne látni? [0: összes]: "))
         tortenet(db)
-    elif valasztas == 7:
-        kategoriak= ["Fizetés", "Ajándék", "Utazás", "Vásárlás", "Szórakozás"]
-        kategoria = input(f"Válassz kategóriát: {kategoriak}:")
-        lista =tranzakcio_szures(kategoria)
         
-        print (f"{kategoria} tranzakciói: ")
+    elif valasztas == 7:
+        kategoriak = ["Fizetés", "Ajándék", "Utazás", "Vásárlás", "Szórakozás"]
+        
+        kategoria = input(f"Válassz kategóriát: {kategoriak}: ")
+        lista = tranzakcio_szures(kategoria)
+
+        print(f"{kategoria} tranzakciói:")
         for sor in lista:
             print(f"\t{sor}")
+
+    elif valasztas ==8:
+        honap_sorszam=int(input("Add meg egy hónap sorszámát: "))
+        print(f"Az idei év {honap_sorszam} hónapjának egyenlege: {havi_osszesito(honap_sorszam)}")
+    elif valasztas == 10:
+        tranzakcio_torles()
+        tortenet(2)
+
     elif valasztas == 13:
-        #     mentes(adatfajl)
+        mentes(adatfajl)
         exit()
+        
 
     input(f"Üss egy billentyűt a folytatáshoz...")
     subprocess.run(["cls"], shell=True)
-    
-    
