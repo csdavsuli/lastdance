@@ -1,8 +1,8 @@
 hostname SW-CSD
 
-ip domain name: csik.david
+ip domain name csik.david
 
-username:sshAdmin privilege 15 pass Admin12
+username sshAdmin privilege 15 pass Admin12
 
 
 crypto key generate rsa 
