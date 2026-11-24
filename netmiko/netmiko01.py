@@ -53,5 +53,26 @@ try:
         kimenet = kapcsolat.send_command('show vlan summary | include existing VLANs')
         
         print(f"VLANOK száma a kapcsolón: {kimenet.strip().split(':')[1].strip()}") 
+
+        
+    #1 Mely portok nincsenek használatban? (Inaktív portok feltérképezése)
+        kimenet=kapcsolat.send_command("show ip interface brief | exclude up")
+        lista=kimenet.strip().split("\n")
+        lista=lista[1:]
+        for sor in (lista):
+            print(sor.split(" ")[0])
+
+    #2. A kapcsoló melyik portjához csatlakozik a PC-d?
+
+        kimenet=kapcsolat.send_command("show mac address-table | include 484d.7ecd.e451 ")
+        mac=kimenet.split(" ")[-1]
+        print(mac)
+
+
+
+
+
+
+
 except Exception as ex:
         print("Hiba a csatlakozáskor: {ex}")
